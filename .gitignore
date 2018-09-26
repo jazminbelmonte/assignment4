@@ -1,0 +1,10 @@
+.DS_Store
+.vscode
+.idea
+logs
+*.log
+build/*
+cmake-build-debug
+
+# Exceptions
+!build/.keep
