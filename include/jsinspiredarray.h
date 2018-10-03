@@ -58,39 +58,92 @@ public:
     auto current = array.first;
     while (current){
       add(current->info);
-      current = current->link;
+      current = current->next;
     }
   }
 
   // TODO: operator=(const JSInspiredArray<T>&)
+  JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
+
+  }
 
   // TODO: push(T)
+  unsigned push(T){
+
+  }
 
   // TODO: pop(T)
+  T pop(T){
+
+  }
 
   // TODO: unshift(T)
+  unsigned unshift(T){
+
+  }
 
   // TODO: shift()
+  T shift(){
+
+  }
 
   // TODO: concat(const JSInspiredArray<T>&)
+  void concat(const JSInspiredArray<T>& array){
+
+  }
 
   // TODO: find(T)
+  LinkedListIterator<T> find(T){
+
+  }
 
   // TODO: friend ostream <<
+  friend std::ostream& operator<<(std::ostream& out, const JSInspiredArray& array) {
+    auto current = array.first;
+    while (current){
+      out << current->info << ", ";
+      current = current->next;
+    }
+
+    return out;
+  }
 
   // TODO: empty()
+  bool const empty(){
+    return (first == nullptr);
+  }
 
   // TODO: length()
+  unsigned const length(){
+    return count;
+  }
 
   // TODO: begin()
+  LinkedListIterator<T> begin(){
+
+  }
 
   // TODO: end()
+  LinkedListIterator<T> end(){
+
+  }
 
   // TODO: ~JSInspiredArray()
+  ~JSInspiredArray(){
+    auto current = first;
+    while(current){
+      auto temp = current;
+      current = current->next;
+      delete temp;
+    }
+    first = nullptr;
+    last = nullptr;
+    count = 0;
+  }
 
 protected:
     Node<T>* first;
-    Node<T> last;
+    Node<T>* last;
     unsigned count;
 };
 
