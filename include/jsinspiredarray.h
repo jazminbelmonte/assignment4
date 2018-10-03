@@ -54,6 +54,8 @@ public:
   JSInspiredArray(): count(0), first(nullptr), last(nullptr){}
 
   // TODO: JSInspiredArray(const JSInspiredArray<T>&)
+  //The copy constructor; creates an object that is an
+  //exact replica of its array argument.
   JSInspiredArray(const JSInspiredArray<T>& array): JSInspiredArray(){
     auto current = array.first;
     while (current){
@@ -63,8 +65,17 @@ public:
   }
 
   // TODO: operator=(const JSInspiredArray<T>&)
+  //The copy assignment operator, makes the array on
+  //the left-hand side of the assignment an exact replica
+  //of the array on the right-hand side.
   JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
-
+    destroy();
+    auto current = array.first;
+    while(current){
+      add(current->info);
+      current = current->next;
+    }
+    return *this;
   }
 
   // TODO: push(T)
@@ -93,8 +104,21 @@ public:
   }
 
   // TODO: find(T)
-  LinkedListIterator<T> find(T){
+  LinkedListIterator<T> find(T findItem){
+    bool found = false;
+    auto current = first;
 
+    while(current != nullptr && !found){
+      if(current->info == findItem){
+        found = true;
+      }
+      else {
+        current = current->next;
+      }
+    }
+    if (found){
+      return LinkedListIterator<T>(current);
+    }
   }
 
   // TODO: friend ostream <<
@@ -130,21 +154,25 @@ public:
 
   // TODO: ~JSInspiredArray()
   ~JSInspiredArray(){
-    auto current = first;
-    while(current){
-      auto temp = current;
-      current = current->next;
-      delete temp;
-    }
-    first = nullptr;
-    last = nullptr;
-    count = 0;
+    destroy();
   }
 
 protected:
     Node<T>* first;
     Node<T>* last;
     unsigned count;
+
+    void destroy(){
+      auto current = first;
+      while(current){
+        auto temp = current;
+        current = current->next;
+        delete temp;
+      }
+      first = nullptr;
+      last = nullptr;
+      count = 0;
+    }
 };
 
 #endif
