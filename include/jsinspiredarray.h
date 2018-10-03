@@ -53,52 +53,76 @@ public:
   // TODO: JSInspiredArray()
   JSInspiredArray(): count(0), first(nullptr), last(nullptr){}
 
-  // TODO: JSInspiredArray(const JSInspiredArray<T>&)
-  //The copy constructor; creates an object that is an
-  //exact replica of its array argument.
-  JSInspiredArray(const JSInspiredArray<T>& array): JSInspiredArray(){
-    auto current = array.first;
-    while (current){
-      add(current->info);
-      current = current->next;
-    }
-  }
+//  // TODO: JSInspiredArray(const JSInspiredArray<T>&)
+//  //The copy constructor; creates an object that is an
+//  //exact replica of its array argument.
+//  JSInspiredArray(const JSInspiredArray<T>& array): JSInspiredArray(){
+//    auto current = array.first;
+//    while (current){
+//      add(current->info);
+//      current = current->next;
+//    }
+//  }
 
-  // TODO: operator=(const JSInspiredArray<T>&)
-  //The copy assignment operator, makes the array on
-  //the left-hand side of the assignment an exact replica
-  //of the array on the right-hand side.
-  JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
-    destroy();
-    auto current = array.first;
-    while(current){
-      add(current->info);
-      current = current->next;
-    }
-    return *this;
-  }
+//  // TODO: operator=(const JSInspiredArray<T>&)
+//  //The copy assignment operator, makes the array on
+//  //the left-hand side of the assignment an exact replica
+//  //of the array on the right-hand side.
+//  JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
+//    destroy();
+//    auto current = array.first;
+//    while(current){
+//      add(current->info);
+//      current = current->next;
+//    }
+//    return *this;
+//  }
 
   // TODO: push(T)
-  unsigned push(T){
+  unsigned push(T insertItem){
+    Node<T>* newNode;
 
+    newNode = new Node<T>;
+    newNode->info = insertItem;
+    newNode->next = nullptr;
+    newNode->prev = nullptr;
+
+    if (first == nullptr){ //if list is empty, new node will be the only node
+      first = newNode;
+      last = newNode;
+      count++;
+    } else { //add node to the end
+      last->next = newNode;
+      newNode->prev = last;
+      newNode->next = nullptr;
+      last = newNode;
+      count++;
+    }
+    return count;
   }
 
   // TODO: pop(T)
+  //Removes the last node and returns its info.
   T pop(T){
 
   }
 
   // TODO: unshift(T)
+  //Adds a node at the beginning of the array; returns
+  //the new size of the array.
   unsigned unshift(T){
 
   }
 
   // TODO: shift()
+  //Removes the first node and returns its info.
   T shift(){
 
   }
 
   // TODO: concat(const JSInspiredArray<T>&)
+  //Adds (concatenates) the nodes of its array argument
+  //one at a time to the end of the array.
   void concat(const JSInspiredArray<T>& array){
 
   }
@@ -143,13 +167,16 @@ public:
   }
 
   // TODO: begin()
+  //Returns an iterator pointing at the first node of the array.
   LinkedListIterator<T> begin(){
-
+    return LinkedListIterator<T>(first);
   }
 
   // TODO: end()
+  //Returns an iterator pointing at what is past the last node
+  //of the array, which is ​nullptr​.
   LinkedListIterator<T> end(){
-
+    return LinkedListIterator<T>(nullptr);
   }
 
   // TODO: ~JSInspiredArray()
