@@ -2,6 +2,7 @@
 #define JS_INSPIRED_ARRAY_H
 
 #include <iostream>
+#include <stdexcept>
 
 template <typename T>
 struct Node {
@@ -103,21 +104,63 @@ public:
 
   // TODO: pop(T)
   //Removes the last node and returns its info.
-  T pop(T){
-
+  T pop(){
+    if (first == nullptr){//if list is empty, no node to remove
+      throw std::runtime_error("List is empty, nothing to remove");
+    } else if (count == 1){ //if only one item in the list
+      first = nullptr;
+      last = nullptr;
+      count = 0;
+    }
+    Node<T>* current = last;
+    last = current->prev;
+    last->next = nullptr;
+    count--;
+    return current->info;
   }
 
   // TODO: unshift(T)
   //Adds a node at the beginning of the array; returns
   //the new size of the array.
-  unsigned unshift(T){
+  unsigned unshift(T insertItem){
+    Node<T>* newNode;
 
+    newNode = new Node<T>;
+    newNode->info = insertItem;
+    newNode->next = nullptr;
+    newNode->prev = nullptr;
+
+    if(first == nullptr){ //if the list is empty
+      first = newNode;
+      last = newNode;
+      count++;
+    } else { // if list is not empty and has +1 nodes
+      first->prev = newNode;
+      newNode->next = first;
+      first = newNode;
+      count++;
+    }
+    return count;
   }
 
   // TODO: shift()
   //Removes the first node and returns its info.
   T shift(){
+    Node<T>* current;
 
+    if (first = nullptr){
+      throw std::runtime_error("List is empty, nothing to remove");
+    } else if (count == 1){
+      first = nullptr;
+      last = nullptr;
+      count = 0;
+    } else {
+      current = first;
+      first = first->next;
+      first->prev = nullptr;
+      count--;
+      return current->info;
+    }
   }
 
   // TODO: concat(const JSInspiredArray<T>&)
