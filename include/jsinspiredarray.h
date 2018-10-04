@@ -54,30 +54,36 @@ public:
   // TODO: JSInspiredArray()
   JSInspiredArray(): count(0), first(nullptr), last(nullptr){}
 
-//  // TODO: JSInspiredArray(const JSInspiredArray<T>&)
-//  //The copy constructor; creates an object that is an
-//  //exact replica of its array argument.
-//  JSInspiredArray(const JSInspiredArray<T>& array): JSInspiredArray(){
-//    auto current = array.first;
-//    while (current){
-//      add(current->info);
-//      current = current->next;
-//    }
-//  }
+  // TODO: JSInspiredArray(const JSInspiredArray<T>&)
+  //The copy constructor; creates an object that is an
+  //exact replica of its array argument.
+  JSInspiredArray(const JSInspiredArray<T>& array): JSInspiredArray(){
 
-//  // TODO: operator=(const JSInspiredArray<T>&)
-//  //The copy assignment operator, makes the array on
-//  //the left-hand side of the assignment an exact replica
-//  //of the array on the right-hand side.
-//  JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
-//    destroy();
-//    auto current = array.first;
-//    while(current){
-//      add(current->info);
-//      current = current->next;
-//    }
-//    return *this;
-//  }
+    Node<T>* current = array.first;
+
+	while (current){
+		Node<T>* temporary = current;
+		current = current->next;
+		delete temporary;
+		temporary = nullptr;
+	}
+  }
+
+  // TODO: operator=(const JSInspiredArray<T>&)
+  //The copy assignment operator, makes the array on
+  //the left-hand side of the assignment an exact replica
+  //of the array on the right-hand side.
+  JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
+    destroy();
+    Node<T>* current = array.first;
+
+	while (current){
+		Node<T>* temporary = current;
+		current = current->next;
+		delete temporary;
+		temporary = nullptr;
+	}
+  }
 
   // TODO: push(T)
   unsigned push(T insertItem){
@@ -85,18 +91,17 @@ public:
 
     newNode = new Node<T>;
     newNode->info = insertItem;
-    newNode->next = nullptr;
-    newNode->prev = nullptr;
 
     if (first == nullptr){ //if list is empty, new node will be the only node
-      first = newNode;
-      last = newNode;
-      count++;
-    } else { //add node to the end
-      last->next = newNode;
-      newNode->prev = last;
       newNode->next = nullptr;
-      last = newNode;
+	  newNode->prev = nullptr;
+      count++;
+    } 
+	else { //add node to the end
+      newNode->next = nullptr;
+	  newNode->prev = last;
+      last->next = newNode;
+	  last = newNode;
       count++;
     }
     return count;
@@ -105,38 +110,44 @@ public:
   // TODO: pop(T)
   //Removes the last node and returns its info.
   T pop(){
-    if (first == nullptr){//if list is empty, no node to remove
+    if (first == nullptr){//if list is empty
       throw std::runtime_error("List is empty, nothing to remove");
-    } else if (count == 1){ //if only one item in the list
-      first = nullptr;
-      last = nullptr;
-      count = 0;
-    }
-    Node<T>* current = last;
-    last = current->prev;
-    last->next = nullptr;
-    count--;
-    return current->info;
+    } 
+	Node<T>* current = last;
+	T info = current->info;
+	if (last == nullptr){ 
+      current = first;
+      current = last;
+	  count--;
+	} 
+	else { 
+	  last->prev->next = nullptr;
+	  last = last->prev;
+	  delete current;
+	  count--;
+	}
+	return info;
   }
 
   // TODO: unshift(T)
   //Adds a node at the beginning of the array; returns
   //the new size of the array.
   unsigned unshift(T insertItem){
+
     Node<T>* newNode;
 
     newNode = new Node<T>;
     newNode->info = insertItem;
-    newNode->next = nullptr;
-    newNode->prev = nullptr;
 
     if(first == nullptr){ //if the list is empty
       first = newNode;
       last = newNode;
       count++;
-    } else { // if list is not empty and has +1 nodes
-      first->prev = newNode;
+    } 
+	else { // if list is not empty and has +1 nodes
+	  newNode->prev = nullptr;
       newNode->next = first;
+	  first->prev = newNode;
       first = newNode;
       count++;
     }
@@ -146,34 +157,42 @@ public:
   // TODO: shift()
   //Removes the first node and returns its info.
   T shift(){
-    Node<T>* current;
 
     if (first = nullptr){
       throw std::runtime_error("List is empty, nothing to remove");
-    } else if (count == 1){
-      first = nullptr;
-      last = nullptr;
-      count = 0;
-    } else {
+    } 
+	Node<T>* current = first;
+    T info = current->info;
+	else if (last == nullptr){
       current = first;
+      current = last;
+	  count--;
+    } 
+	else {
+	  first->next->prev = nullptr;
       first = first->next;
-      first->prev = nullptr;
+	  delete current;
       count--;
-      return current->info;
     }
+	return info;
   }
 
   // TODO: concat(const JSInspiredArray<T>&)
   //Adds (concatenates) the nodes of its array argument
   //one at a time to the end of the array.
   void concat(const JSInspiredArray<T>& array){
+	  Node<T>* current = array.first;
 
+      while(current->next)
+      {
+        push(current->info);
+      }
   }
 
   // TODO: find(T)
   LinkedListIterator<T> find(T findItem){
     bool found = false;
-    auto current = first;
+    Node<T>* current = first;
 
     while(current != nullptr && !found){
       if(current->info == findItem){
@@ -190,7 +209,7 @@ public:
 
   // TODO: friend ostream <<
   friend std::ostream& operator<<(std::ostream& out, const JSInspiredArray& array) {
-    auto current = array.first;
+    Node<T>* current = array.first;
     while (current){
       out << current->info << ", ";
       current = current->next;
@@ -217,7 +236,7 @@ public:
 
   // TODO: end()
   //Returns an iterator pointing at what is past the last node
-  //of the array, which is ​nullptr​.
+  //of the array, which is ?nullptr?.
   LinkedListIterator<T> end(){
     return LinkedListIterator<T>(nullptr);
   }
@@ -233,9 +252,9 @@ protected:
     unsigned count;
 
     void destroy(){
-      auto current = first;
+      Node<T>* current = first;
       while(current){
-        auto temp = current;
+        Node<T>* temp = current;
         current = current->next;
         delete temp;
       }
