@@ -17,32 +17,32 @@ template <typename T>
 class LinkedListIterator{
 
 public:
-  // TODO: LinkedListOperator(Node<T>*)
+  // LinkedListOperator(Node<T>*)
   LinkedListIterator(Node<T>* ptr): current(ptr){}
 
-  // TODO: Operator++
+  // Increment Operator++ 
   LinkedListIterator<T>& operator++(){
     current = current->next;
     return *this;
   }
 
-  // TODO: Operator*
+  // Operator*
   T operator*(){
     return current->info;
   }
 
-  // TODO: Operator==
+  // Operator==
   bool operator==(const LinkedListIterator<T>& rhs) {
     return current == rhs.current;
   }
   
-  // TODO: Operator!=
+  // Operator!=
   bool operator!=(const LinkedListIterator<T>& rhs) {
     return current != rhs.current;
   }
 
 private:
-  // TODO: current
+  // current
   Node<T>* current;
 
 };
@@ -51,10 +51,9 @@ template <typename T>
 class JSInspiredArray {
 
 public:
-  // TODO: JSInspiredArray()
+  // JSInspiredArray()
   JSInspiredArray(): count(0), first(nullptr), last(nullptr){}
 
-  // TODO: JSInspiredArray(const JSInspiredArray<T>&)
   //The copy constructor; creates an object that is an
   //exact replica of its array argument.
   JSInspiredArray(const JSInspiredArray<T>& array): JSInspiredArray(){
@@ -66,8 +65,7 @@ public:
 		current = current->next;
 	}
   }
-
-  // TODO: operator=(const JSInspiredArray<T>&)
+	
   //The copy assignment operator, makes the array on
   //the left-hand side of the assignment an exact replica
   //of the array on the right-hand side.
@@ -78,78 +76,76 @@ public:
     Node<T>* current = array.first;
 
 	while (current){
-		unshift(current->info)
+		push(current->info)
 		current = current->next;
 	}
   }
 
-  // TODO: push(T)
+  //push(T)	
   //adds nodes to the end        
   unsigned push(T insertItem){
 
-    Node<T>* newNode = new Node<T>;
-    newNode->info = insertItem;
+    Node<T>* newNode = new Node<T>(insertItem);
 
-    if (first == nullptr){ //if list is empty, new node will be the only node
-      newNode->next = nullptr;
-	  newNode->prev = nullptr;
-      count++;
+    if (first == nullptr){ //if list is empty
+    	first = newNode;
+	last = newNode;
+        count++;
     } 
-	else { //add node to the end
+    else { //add node to the end
       newNode->next = nullptr;
-	  newNode->prev = last;
+      newNode->prev = last;
       last->next = newNode;
-	  last = newNode;
+      last = newNode;
       count++;
     }
     return count;
   }
 
-  // TODO: pop(T)
+  // pop()
   //Removes the last node and returns its info.
   T pop(){
       
     if (first == nullptr){//if list is empty
       throw std::runtime_error("List is empty, nothing to remove");
     } 
-	T info = last->info;
-	if (first == last){ 
-      first = nullptr;
-      last = nullptr;
-	  count--;
-	} 
-	else { 
-	  last->prev->next = nullptr;
-	  last = last->prev;
-	  count--;
-	}
-	return info;
+    T info = last->info;
+    if (first == last){ 
+      	first = nullptr;
+      	last = nullptr;
+      	count--;
+    } 
+    else { 
+    	last->prev->next = nullptr;
+	last = last->prev;
+	count--;
+    }
+    return info;
   }
 
-  // TODO: unshift(T)
+  // unshift(T)
   //Adds a node at the beginning of the array; returns
   //the new size of the array.
   unsigned unshift(T insertItem){
 
-    Node<T>* newNode = new Node<T>;
-    newNode->info = insertItem;
+    Node<T>* newNode = new Node<T>(insertItem);
 
     if(first == nullptr){ //if the list is empty
       first = newNode;
       last = newNode;
       count++;
     } 
-	else { // if list is not empty and has +1 nodes
-	  newNode->prev = nullptr;
+    else {
       newNode->next = first;
-	  first->prev = newNode;
+      newNode->prev = nullptr;
+      first->prev = newNode;
       first = newNode;
       count++;
     }
     return count;
   }
 
-  // TODO: shift()
+  // shift()
   //Removes the first node and returns its info.
   T shift(){
 
@@ -157,33 +153,36 @@ public:
       throw std::runtime_error("List is empty, nothing to remove");
     } 
     T info = first->info;
-	if (first == last){
+    if (first == last){
       first == nullptr;
       last == nullptr;
-	  count--;
+      count--;
     } 
-	else {
-	  first->next->prev = nullptr;
+    else {
+      first->next->prev = nullptr;
       first = first->next;
       count--;
     }
-	return info;
+    return info;
   }
 
 
-  // TODO: concat(const JSInspiredArray<T>&)
+  // concat(const JSInspiredArray<T>&)
   //Adds (concatenates) the nodes of its array argument
   //one at a time to the end of the array.
   void concat(const JSInspiredArray<T>& array){
-	  Node<T>* current = array.first;
-
-      while(current->next)
-      {
-        push(current->info);
-      }
+     Node<T>* current = array.first;
+     int counter = 0;
+     while(counter < array.count)
+     {
+	 push(current->info);
+	 current = current->next;
+	 counter++;
+     }
   }
 
-  // TODO: find(T)
+  // find(T)
+  //searches through the array to find specific value
   LinkedListIterator<T> find(T findItem){
     bool found = false;
     Node<T>* current = first;
@@ -198,37 +197,40 @@ public:
     }
     if (found){
       return LinkedListIterator<T>(current);
+    } else if (!found) {
+      return false;    
     }
   }
 
-  // TODO: friend ostream <<
+  // friend ostream <<
   friend std::ostream& operator<<(std::ostream& out, const JSInspiredArray& array) {
     Node<T>* current = array.first;
     while (current){
-      out << current->info << ",";
+      out << current->info << " ";
       current = current->next;
     }
-
     return out;
   }
 
-  // TODO: empty()
+  // empty()
+  // checks if list in empty
   bool const empty(){
     return (first == nullptr);
   }
 
-  // TODO: length()
+  // length()
+  // returns length of list
   unsigned const length(){
     return count;
   }
 
-  // TODO: begin()
+  // begin()
   //Returns an iterator pointing at the first node of the array.
   LinkedListIterator<T> begin(){
     return LinkedListIterator<T>(first);
   }
 
-  // TODO: end()
+  // end()
   //Returns an iterator pointing at what is past the last node
   //of the array, which is ?nullptr?.
   LinkedListIterator<T> end(){
@@ -245,6 +247,7 @@ protected:
     Node<T>* last;
     unsigned count;
 
+    //destroy function used to deallocate existing memory	
     void destroy(){
       Node<T>* current = first;
         
