@@ -22,7 +22,7 @@ public:
 
   // TODO: Operator++
   LinkedListIterator<T>& operator++(){
-    current = current->link;
+    current = current->next;
     return *this;
   }
 
@@ -35,7 +35,7 @@ public:
   bool operator==(const LinkedListIterator<T>& rhs) {
     return current == rhs.current;
   }
-
+  
   // TODO: Operator!=
   bool operator!=(const LinkedListIterator<T>& rhs) {
     return current != rhs.current;
@@ -62,10 +62,8 @@ public:
     Node<T>* current = array.first;
 
 	while (current){
-		Node<T>* temporary = current;
+		unshift(current->info)
 		current = current->next;
-		delete temporary;
-		temporary = nullptr;
 	}
   }
 
@@ -74,22 +72,22 @@ public:
   //the left-hand side of the assignment an exact replica
   //of the array on the right-hand side.
   JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
+      
     destroy();
+    
     Node<T>* current = array.first;
 
 	while (current){
-		Node<T>* temporary = current;
+		unshift(current->info)
 		current = current->next;
-		delete temporary;
-		temporary = nullptr;
 	}
   }
 
   // TODO: push(T)
+  //adds nodes to the end        
   unsigned push(T insertItem){
-    Node<T>* newNode;
 
-    newNode = new Node<T>;
+    Node<T>* newNode = new Node<T>;
     newNode->info = insertItem;
 
     if (first == nullptr){ //if list is empty, new node will be the only node
@@ -110,20 +108,19 @@ public:
   // TODO: pop(T)
   //Removes the last node and returns its info.
   T pop(){
+      
     if (first == nullptr){//if list is empty
       throw std::runtime_error("List is empty, nothing to remove");
     } 
-	Node<T>* current = last;
-	T info = current->info;
-	if (last == nullptr){ 
-      current = first;
-      current = last;
+	T info = last->info;
+	if (first == last){ 
+      first = nullptr;
+      last = nullptr;
 	  count--;
 	} 
 	else { 
 	  last->prev->next = nullptr;
 	  last = last->prev;
-	  delete current;
 	  count--;
 	}
 	return info;
@@ -134,9 +131,7 @@ public:
   //the new size of the array.
   unsigned unshift(T insertItem){
 
-    Node<T>* newNode;
-
-    newNode = new Node<T>;
+    Node<T>* newNode = new Node<T>;
     newNode->info = insertItem;
 
     if(first == nullptr){ //if the list is empty
@@ -161,21 +156,20 @@ public:
     if (first = nullptr){
       throw std::runtime_error("List is empty, nothing to remove");
     } 
-	Node<T>* current = first;
-    T info = current->info;
-	else if (last == nullptr){
-      current = first;
-      current = last;
+    T info = first->info;
+	if (first == last){
+      first == nullptr;
+      last == nullptr;
 	  count--;
     } 
 	else {
 	  first->next->prev = nullptr;
       first = first->next;
-	  delete current;
       count--;
     }
 	return info;
   }
+
 
   // TODO: concat(const JSInspiredArray<T>&)
   //Adds (concatenates) the nodes of its array argument
@@ -211,7 +205,7 @@ public:
   friend std::ostream& operator<<(std::ostream& out, const JSInspiredArray& array) {
     Node<T>* current = array.first;
     while (current){
-      out << current->info << ", ";
+      out << current->info << ",";
       current = current->next;
     }
 
@@ -253,11 +247,14 @@ protected:
 
     void destroy(){
       Node<T>* current = first;
+        
       while(current){
         Node<T>* temp = current;
         current = current->next;
         delete temp;
+        temp = nullptr;
       }
+        
       first = nullptr;
       last = nullptr;
       count = 0;
