@@ -56,41 +56,36 @@ public:
 
   //The copy constructor; creates an object that is an
   //exact replica of its array argument.
+  JSInspiredArray(): count(0), first(nullptr), last(nullptr){}
+
   JSInspiredArray(const JSInspiredArray<T>& array): JSInspiredArray(){
-
     Node<T>* current = array.first;
-
-	while (current){
-		push(current->info)
-		current = current->next;
-	}
+    while (current){
+	push(current->info);
+	current = current->next;
+    }
   }
 	
   //The copy assignment operator, makes the array on
   //the left-hand side of the assignment an exact replica
   //of the array on the right-hand side.
   JSInspiredArray<T>& operator=(const JSInspiredArray<T>& array){
-      
     destroy();
-    
     Node<T>* current = array.first;
-
-	while (current){
-		push(current->info)
-		current = current->next;
-	}
+    while (current){
+	push(current->info);
+	current = current->next;
+    }
   }
 
   //push(T)	
   //adds nodes to the end        
   unsigned push(T insertItem){
-
     Node<T>* newNode = new Node<T>(insertItem);
-
-    if (first == nullptr){ //if list is empty
-    	first = newNode;
-	last = newNode;
-        count++;
+    if (first == nullptr){ //if list is empty, new node will be the only node
+      first = newNode;
+      last = newNode;
+      count++;
     } 
     else { //add node to the end
       newNode->next = nullptr;
@@ -111,14 +106,14 @@ public:
     } 
     T info = last->info;
     if (first == last){ 
-      	first = nullptr;
-      	last = nullptr;
-      	count--;
+      first == nullptr;
+      last == nullptr;
+      count--;
     } 
     else { 
-    	last->prev->next = nullptr;
-	last = last->prev;
-	count--;
+      last->prev->next = nullptr;
+      last = last->prev;
+      count--;
     }
     return info;
   }
@@ -127,9 +122,7 @@ public:
   //Adds a node at the beginning of the array; returns
   //the new size of the array.
   unsigned unshift(T insertItem){
-
     Node<T>* newNode = new Node<T>(insertItem);
-
     if(first == nullptr){ //if the list is empty
       first = newNode;
       last = newNode;
@@ -148,7 +141,6 @@ public:
   // shift()
   //Removes the first node and returns its info.
   T shift(){
-
     if (first = nullptr){
       throw std::runtime_error("List is empty, nothing to remove");
     } 
