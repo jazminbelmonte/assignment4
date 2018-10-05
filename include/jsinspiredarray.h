@@ -62,7 +62,7 @@ public:
     Node<T>* current = array.first;
 
 	while (current){
-		unshift(current->info)
+		push(current->info)
 		current = current->next;
 	}
   }
