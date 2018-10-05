@@ -77,7 +77,7 @@ int main(){
     copyNumbers.unshift(9.8);
     
     JSInspiredArray<double> copiedNumbers(copyNumbers);
-    cout << copiedNumbers; 
+    cout << copiedNumbers;
 
   return 0;
 }
